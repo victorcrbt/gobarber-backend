@@ -1,8 +1,10 @@
 import express from 'express';
 
+import routes from './routes';
+
 const app = express();
 
-app.get('/', (req, res) => res.json({ message: 'Hello, World!' }));
+app.use(routes);
 
 const PORT = 3333;
 
