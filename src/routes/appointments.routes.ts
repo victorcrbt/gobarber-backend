@@ -26,7 +26,10 @@ routes.post('/', (req, res) => {
     return res.status(403).json({ error: 'This time is already taken.' });
   }
 
-  const appointment = appointmentsRepository.create(provider, parsedDate);
+  const appointment = appointmentsRepository.create({
+    provider,
+    date: parsedDate,
+  });
 
   return res.json(appointment);
 });
