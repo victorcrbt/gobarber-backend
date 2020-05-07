@@ -20,6 +20,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
+    '@typescript-eslint/camelcase': 'off',
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
     'import/extensions': [
