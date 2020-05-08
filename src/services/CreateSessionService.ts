@@ -4,6 +4,8 @@ import { sign } from 'jsonwebtoken';
 
 import User from '../models/User';
 
+import authConfig from '../config/auth';
+
 interface RequestDTO {
   email: string;
   password: string;
@@ -32,9 +34,9 @@ class CreateSessionService {
       throw new Error('Invalid credentials.');
     }
 
-    const token = sign({}, 'e89da1c8c4c5dc3226f019977755644f', {
+    const token = sign({}, authConfig.jwt.secret, {
       subject: user.id,
-      expiresIn: '1d',
+      expiresIn: authConfig.jwt.expiresIn,
     });
 
     return {
