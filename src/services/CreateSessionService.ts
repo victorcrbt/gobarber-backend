@@ -5,6 +5,7 @@ import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 
 import authConfig from '../config/auth';
+import AppError from '../error/AppError';
 
 interface RequestDTO {
   email: string;
@@ -25,13 +26,19 @@ class CreateSessionService {
     });
 
     if (!user) {
-      throw new Error('Invalid credentials.');
+      throw new AppError({
+        status: 401,
+        message: 'Invalid credentials.',
+      });
     }
 
     const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new Error('Invalid credentials.');
+      throw new AppError({
+        status: 401,
+        message: 'Invalid credentials.',
+      });
     }
 
     const token = sign({}, authConfig.jwt.secret, {

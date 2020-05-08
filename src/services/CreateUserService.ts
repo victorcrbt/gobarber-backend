@@ -2,6 +2,8 @@ import { getRepository } from 'typeorm';
 
 import User from '../models/User';
 
+import AppError from '../error/AppError';
+
 interface RequestDTO {
   name: string;
   email: string;
@@ -15,7 +17,10 @@ class CreateUserService {
     const emailAlreadyUsed = await userRepository.findOne({ where: { email } });
 
     if (emailAlreadyUsed) {
-      throw new Error('The provided email is already in use.');
+      throw new AppError({
+        status: 400,
+        message: 'The provided email is already in use.',
+      });
     }
 
     const user = userRepository.create({ name, email, password });

@@ -4,6 +4,8 @@ import { getCustomRepository } from 'typeorm';
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
+import AppError from '../error/AppError';
+
 interface RequestDTO {
   date: Date;
   provider_id: string;
@@ -20,7 +22,10 @@ class CreateAppointmentService {
     );
 
     if (findAppointmentInSameHour) {
-      throw new Error('This time is already taken.');
+      throw new AppError({
+        status: 400,
+        message: 'This time is already taken.',
+      });
     }
 
     const appointment = appointmentsRepository.create({
