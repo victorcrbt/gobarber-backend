@@ -3,13 +3,12 @@ interface ErrorProperties {
   status: number;
 }
 
-class AppError extends Error {
+class AppError {
   public readonly status: number;
 
   public readonly message: string;
 
   constructor({ status = 400, message }: ErrorProperties) {
-    super();
     this.message = message;
     this.status = status;
   }
