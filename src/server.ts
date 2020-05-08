@@ -1,8 +1,10 @@
 import 'reflect-metadata';
 import express from 'express';
+import 'express-async-errors';
 
 import uploadConfig from './config/upload';
 import routes from './routes';
+import exceptionHandler from './middlewares/exceptionHandler';
 
 import './database';
 
@@ -12,6 +14,7 @@ app.use(express.json());
 app.use('/files', express.static(uploadConfig.directory));
 
 app.use(routes);
+app.use(exceptionHandler);
 
 const PORT = 3333;
 
