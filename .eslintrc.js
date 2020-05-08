@@ -21,8 +21,15 @@ module.exports = {
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
     '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        argsIgnorePattern: '_',
+      },
+    ],
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
+    'no-console': ['warn', { allow: ['error'] }],
     'import/extensions': [
       'error',
       'ignorePackages',
