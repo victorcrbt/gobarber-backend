@@ -21,6 +21,10 @@ module.exports = {
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
     '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/interface-name-prefix': [
+      'error',
+      { prefixWithI: 'always' },
+    ],
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {
@@ -30,6 +34,7 @@ module.exports = {
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
     'no-console': ['warn', { allow: ['error'] }],
+    'no-useless-constructor': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',

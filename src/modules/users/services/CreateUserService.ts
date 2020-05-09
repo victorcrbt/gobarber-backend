@@ -1,20 +1,19 @@
-import { getRepository } from 'typeorm';
-
+import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import User from '@modules/users/infra/typeorm/entities/User';
 
 import AppError from '@shared/error/AppError';
 
-interface RequestDTO {
+interface IRequestDTO {
   name: string;
   email: string;
   password: string;
 }
 
 class CreateUserService {
-  public async run({ name, email, password }: RequestDTO): Promise<User> {
-    const userRepository = getRepository(User);
+  constructor(private usersRepository: IUsersRepository) {}
 
-    const emailAlreadyUsed = await userRepository.findOne({ where: { email } });
+  public async run({ name, email, password }: IRequestDTO): Promise<User> {
+    const emailAlreadyUsed = await this.usersRepository.findByEmail(email);
 
     if (emailAlreadyUsed) {
       throw new AppError({
@@ -23,9 +22,7 @@ class CreateUserService {
       });
     }
 
-    const user = userRepository.create({ name, email, password });
-
-    await userRepository.save(user);
+    const user = await this.usersRepository.create({ name, email, password });
 
     return user;
   }

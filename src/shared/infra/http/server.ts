@@ -2,11 +2,11 @@ import 'reflect-metadata';
 import express from 'express';
 import 'express-async-errors';
 
+import '@shared/infra/typeorm';
+
 import uploadConfig from '@config/upload';
 import routes from './routes';
 import exceptionHandler from './middlewares/exceptionHandler';
-
-import '@shared/infra/typeorm';
 
 const app = express();
 
