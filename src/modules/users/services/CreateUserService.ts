@@ -1,3 +1,5 @@
+import { injectable, inject } from 'tsyringe';
+
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import User from '@modules/users/infra/typeorm/entities/User';
 
@@ -9,8 +11,12 @@ interface IRequestDTO {
   password: string;
 }
 
+@injectable()
 class CreateUserService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository
+  ) {}
 
   public async run({ name, email, password }: IRequestDTO): Promise<User> {
     const emailAlreadyUsed = await this.usersRepository.findByEmail(email);

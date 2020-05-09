@@ -1,3 +1,4 @@
+import { injectable, inject } from 'tsyringe';
 import path from 'path';
 import fs from 'fs';
 
@@ -12,8 +13,12 @@ interface IRequestDTO {
   avatarFilename: string;
 }
 
+@injectable()
 class UpdateUserAvatarService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository
+  ) {}
 
   public async run({ user_id, avatarFilename }: IRequestDTO): Promise<User> {
     const user = await this.usersRepository.findById(user_id);
