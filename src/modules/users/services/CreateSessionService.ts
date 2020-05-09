@@ -35,7 +35,7 @@ class CreateSessionService {
       });
     }
 
-    const passwordMatch = await compare(password, user.password);
+    const passwordMatch = await compare(password, user.password_hash);
 
     if (!passwordMatch) {
       throw new AppError({

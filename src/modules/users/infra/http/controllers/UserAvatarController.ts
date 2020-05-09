@@ -12,7 +12,7 @@ export default class UserAvatarController {
       avatarFilename: req.file.filename,
     });
 
-    delete user.password;
+    delete user.password_hash;
 
     return res.status(200).json(user);
   }

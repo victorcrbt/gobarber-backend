@@ -21,6 +21,13 @@ class User {
   public email: string;
 
   @Column()
+  public password_hash: string;
+
+  @Column({
+    update: false,
+    insert: false,
+    select: false,
+  })
   public password: string;
 
   @Column()
@@ -35,7 +42,11 @@ class User {
   @BeforeInsert()
   @BeforeUpdate()
   private async hashPassword(): Promise<void> {
-    this.password = await hash(this.password, 10);
+    if (this.password) {
+      this.password_hash = await hash(this.password, 10);
+
+      delete this.password;
+    }
   }
 }
 

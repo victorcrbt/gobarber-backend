@@ -11,7 +11,7 @@ export default class SessionsController {
 
     const { token, user } = await createSession.run({ email, password });
 
-    delete user.password;
+    delete user.password_hash;
 
     return res.json({ token, user });
   }
