@@ -1,8 +1,8 @@
-import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { injectable, inject } from 'tsyringe';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
 import User from '@modules/users/infra/typeorm/entities/User';
 
 import authConfig from '@config/auth';
@@ -22,7 +22,10 @@ interface IResponseDTO {
 class CreateSessionService {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository
+    private usersRepository: IUsersRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider
   ) {}
 
   public async run({ email, password }: IRequestDTO): Promise<IResponseDTO> {
@@ -35,7 +38,10 @@ class CreateSessionService {
       });
     }
 
-    const passwordMatch = await compare(password, user.password_hash);
+    const passwordMatch = await this.hashProvider.compareHash(
+      password,
+      user.password
+    );
 
     if (!passwordMatch) {
       throw new AppError({
