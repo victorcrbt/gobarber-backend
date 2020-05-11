@@ -11,7 +11,7 @@ export default class UsersController {
 
     const user = await createUser.run({ name, email, password });
 
-    delete user.password_hash;
+    delete user.password;
 
     return res.status(201).json(user);
   }
