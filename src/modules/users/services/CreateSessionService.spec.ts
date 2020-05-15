@@ -4,21 +4,23 @@ import AppError from '@shared/error/AppError';
 import CreateSessionService from './CreateSessionService';
 import CreateUserService from './CreateUserService';
 
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashProvider: FakeHashProvider;
+let createUser: CreateUserService;
+let createSession: CreateSessionService;
+
 describe('CreateSession', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashProvider = new FakeHashProvider();
+    createUser = new CreateUserService(fakeUsersRepository, fakeHashProvider);
+    createSession = new CreateSessionService(
+      fakeUsersRepository,
+      fakeHashProvider
+    );
+  });
+
   it('it should be able to authenticate', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider
-    );
-
-    const createSession = new CreateSessionService(
-      fakeUsersRepository,
-      fakeHashProvider
-    );
-
     const user = await createUser.run({
       name: 'John Doe',
       email: 'john@email.com',
@@ -35,14 +37,6 @@ describe('CreateSession', () => {
   });
 
   it('should not be able to authenticate with an email that does not exist', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createSession = new CreateSessionService(
-      fakeUsersRepository,
-      fakeHashProvider
-    );
-
     try {
       await createSession.run({
         email: 'john@email.com',
@@ -56,19 +50,6 @@ describe('CreateSession', () => {
   });
 
   it('should not be able to authenticate with a incorrect password', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider
-    );
-
-    const createSession = new CreateSessionService(
-      fakeUsersRepository,
-      fakeHashProvider
-    );
-
     await createUser.run({
       name: 'John Doe',
       email: 'john@email.com',
