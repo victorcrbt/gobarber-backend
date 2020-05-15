@@ -128,4 +128,20 @@ describe('UpdateProfile', () => {
       expect(error).toHaveProperty('message', 'The old password is incorrect.');
     }
   });
+
+  it('should throw an error if the user does not exist', async () => {
+    try {
+      await updateProfile.run({
+        user_id: 'non-existing-user',
+        name: 'Jane Doe',
+        email: 'jane@email.com',
+        old_password: '123123',
+        password: '000000',
+      });
+    } catch (error) {
+      expect(error).toBeInstanceOf(AppError);
+      expect(error).toHaveProperty('status', 404);
+      expect(error).toHaveProperty('message', 'User not found.');
+    }
+  });
 });
