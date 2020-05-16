@@ -1,4 +1,4 @@
-import { getDaysInMonth, getDate, getHours } from 'date-fns';
+import { isAfter, getHours } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
@@ -47,14 +47,18 @@ class ListProviderDayAvailabilityService {
       (_, index) => index + firstAppointmentHour
     );
 
+    const currentDate = new Date(Date.now());
+
     const availability = eachHourArray.map(hour => {
       const hasAppointmentInHour = appointments.find(appointment => {
         return getHours(appointment.date) === hour;
       });
 
+      const compareDate = new Date(year, month - 1, day, hour);
+
       return {
         hour,
-        available: !hasAppointmentInHour,
+        available: !hasAppointmentInHour && isAfter(compareDate, currentDate),
       };
     });
 
