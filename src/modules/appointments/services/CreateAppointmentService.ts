@@ -9,6 +9,7 @@ import AppError from '@shared/error/AppError';
 interface IRequestDTO {
   date: Date;
   provider_id: string;
+  user_id: string;
 }
 
 @injectable()
@@ -18,7 +19,11 @@ class CreateAppointmentService {
     private appointmentsRepository: IAppointmentsRepository
   ) {}
 
-  public async run({ date, provider_id }: IRequestDTO): Promise<Appointment> {
+  public async run({
+    date,
+    user_id,
+    provider_id,
+  }: IRequestDTO): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
 
     const findAppointmentInSameHour = await this.appointmentsRepository.findByDate(
@@ -34,6 +39,7 @@ class CreateAppointmentService {
 
     const appointment = await this.appointmentsRepository.create({
       provider_id,
+      user_id,
       date: appointmentDate,
     });
 
