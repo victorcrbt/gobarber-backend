@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
 import ICreateUserDTO from '@modules/users/dtos/ICreateUserDTO';
+import IFindAllProvidersDTO from '@modules/users/dtos/IFindAllProvidersDTO';
 
 import User from '@modules/users/infra/typeorm/entities/User';
 
@@ -21,6 +22,16 @@ class FakeUsersRepository implements IUsersRepository {
     this.usersRepository.push(user);
 
     return user;
+  }
+
+  public async findAllProviders({
+    except_user_id,
+  }: IFindAllProvidersDTO): Promise<User[]> {
+    const users = this.usersRepository.filter(
+      user => user.id !== except_user_id
+    );
+
+    return users;
   }
 
   public async findByEmail(email: string): Promise<User | undefined> {
