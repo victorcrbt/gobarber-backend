@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import express from 'express';
 import 'express-async-errors';
+import { errors } from 'celebrate';
 
 import '@shared/infra/typeorm';
 import '@shared/container';
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/files', express.static(uploadConfig.uploadsFolder));
 
 app.use(routes);
+app.use(errors());
 app.use(exceptionHandler);
 
 const PORT = 3333;
