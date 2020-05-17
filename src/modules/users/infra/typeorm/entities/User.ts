@@ -4,10 +4,8 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  BeforeInsert,
-  BeforeUpdate,
 } from 'typeorm';
-import { hash } from 'bcryptjs';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity('users')
 class User {
@@ -21,6 +19,7 @@ class User {
   public email: string;
 
   @Column()
+  @Exclude()
   public password: string;
 
   @Column()
@@ -31,6 +30,13 @@ class User {
 
   @UpdateDateColumn()
   public updated_at: Date;
+
+  @Expose({ name: 'avatar_url' })
+  getAvatarUrl(): string | null {
+    return this.avatar
+      ? `${process.env.APP_API_URL}/files/${this.avatar}`
+      : null;
+  }
 }
 
 export default User;
