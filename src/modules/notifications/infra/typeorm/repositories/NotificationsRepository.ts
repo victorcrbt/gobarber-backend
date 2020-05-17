@@ -26,4 +26,8 @@ export default class NotificationsRepository
 
     return notification;
   }
+
+  public async findAll(): Promise<Notification[]> {
+    return this.ormRepository.find();
+  }
 }

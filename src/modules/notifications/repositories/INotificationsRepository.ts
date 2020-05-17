@@ -4,4 +4,5 @@ import ICreateNotificationDTO from '@modules/notifications/dtos/ICreateNotificat
 
 export default interface INotificationsRepository {
   create(data: ICreateNotificationDTO): Promise<Notification>;
+  findAll(): Promise<Notification[]>;
 }
