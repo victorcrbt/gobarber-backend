@@ -44,7 +44,9 @@ class CreateAppointmentService {
       });
     }
 
-    if (isBefore(appointmentDate, Date.now())) {
+    const isPastDate = isBefore(appointmentDate, Date.now());
+
+    if (isPastDate) {
       throw new AppError({
         status: 400,
         message: "You can't book an appointment on a past date.",

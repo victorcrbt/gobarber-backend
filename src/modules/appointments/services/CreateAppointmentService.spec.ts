@@ -1,17 +1,21 @@
 import { startOfHour } from 'date-fns';
 
 import FakeAppointmentsRepository from '@modules/appointments/repositories/fakes/FakeAppointmentsRepository';
+import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
 import AppError from '@shared/error/AppError';
 import CreateAppointmentService from './CreateAppointmentService';
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
+let fakeNotificationsRepository: FakeNotificationsRepository;
 let createAppointment: CreateAppointmentService;
 
 describe('CreateAppointment', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    fakeNotificationsRepository = new FakeNotificationsRepository();
     createAppointment = new CreateAppointmentService(
-      fakeAppointmentsRepository
+      fakeAppointmentsRepository,
+      fakeNotificationsRepository
     );
   });
 
@@ -32,6 +36,38 @@ describe('CreateAppointment', () => {
     expect(appointment).toHaveProperty('provider_id', 'provider-id');
     expect(appointment).toHaveProperty('user_id', 'user-id');
     expect(appointment).toHaveProperty('date', startOfHour(date));
+  });
+
+  it('should create a notification when an appointment is created', async () => {
+    jest.spyOn(Date, 'now').mockImplementation(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
+
+    await createAppointment.run({
+      provider_id: 'provider-id',
+      user_id: 'user-id',
+      date: new Date(2020, 4, 10, 14),
+    });
+
+    await createAppointment.run({
+      provider_id: 'provider-id',
+      user_id: 'user-id',
+      date: new Date(2020, 4, 10, 17),
+    });
+
+    const notifications = await fakeNotificationsRepository.findAll();
+
+    expect(notifications).toHaveLength(2);
+    expect(notifications).toStrictEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: notifications[0].id,
+        }),
+        expect.objectContaining({
+          id: notifications[1].id,
+        }),
+      ])
+    );
   });
 
   it('should not be able to create two appointments on the same time', async () => {
