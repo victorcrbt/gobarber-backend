@@ -8,6 +8,7 @@ import HandlebarsMailTemplateProvider from './MailTemplateProvider/implementatio
 
 import IMailProvider from './MailProvider/models/IMailProvider';
 import EtherealMailProvider from './MailProvider/implementations/EtherealMailProvider';
+import MailtrapProvider from './MailProvider/implementations/MailtrapProvider';
 
 container.registerSingleton<IStorageProvider>(
   'StorageProvider',
@@ -21,5 +22,5 @@ container.registerSingleton<IMailTemplateProvider>(
 
 container.registerInstance<IMailProvider>(
   'MailProvider',
-  container.resolve(EtherealMailProvider)
+  container.resolve(MailtrapProvider)
 );
