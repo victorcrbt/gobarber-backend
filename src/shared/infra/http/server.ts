@@ -9,10 +9,12 @@ import '@shared/container';
 
 import uploadConfig from '@config/upload';
 import routes from './routes';
+import rateLimiter from './middlewares/rateLimiter';
 import exceptionHandler from './middlewares/exceptionHandler';
 
 const app = express();
 
+app.use(rateLimiter);
 app.use(express.json());
 app.use('/files', express.static(uploadConfig.uploadsFolder));
 
